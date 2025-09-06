@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    ".react-router/types/**/*",
+    "shared/**/*",
+    "web/**/*",
+    "web/**/.server/**/*",
+    "web/**/.client/**/*",
+    "reset.d.ts",
+    "shared/**/*",
+    "global.d.ts"
+  ],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "composite": true,
+    "strict": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": [
+      "vite/client",
+      "@react-router/node",
+      "@shopify/app-bridge-types",
+      "@shopify/admin-api-client"
+    ],
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "rootDirs": [".", "./.react-router/types"],
+    "paths": {
+      "web/*": ["./web/*"],
+      "shared/*": ["./shared/*"]
+    },
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "emitDeclarationOnly": true
+  }
+}

@@ -1,0 +1,42 @@
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type PropsWithChildren,
+} from 'react';
+import { AnalyticsManager } from './manager';
+import { MantleAnalyticsProvider } from './providers/mantle';
+import { MixpanelAnalyticsProvider } from './providers/mixpanel';
+import { MockAnalyticsProvider } from './providers/mock';
+import { PostHogAnalyticsProvider } from './providers/posthog';
+
+const analyticsManager = new AnalyticsManager();
+if (process.env.NODE_ENV === 'production') {
+  analyticsManager.addProvider(new MantleAnalyticsProvider());
+  analyticsManager.addProvider(new PostHogAnalyticsProvider());
+  analyticsManager.addProvider(new MixpanelAnalyticsProvider());
+} else {
+  analyticsManager.addProvider(new MockAnalyticsProvider());
+}
+
+const AnalyticsContext = createContext<AnalyticsManager>(analyticsManager);
+
+export const useAnalytics = () => useContext(AnalyticsContext);
+
+export function AnalyticsContextProvider({ children }: PropsWithChildren) {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    analyticsManager.init();
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) return children;
+
+  return (
+    <AnalyticsContext.Provider value={analyticsManager}>
+      {children}
+    </AnalyticsContext.Provider>
+  );
+}

@@ -1,0 +1,6 @@
+shared/_generated/
+.gadget/
+.shopify/
+.react-router/
+.vscode/
+node_modules/

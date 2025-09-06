@@ -1,0 +1,10 @@
+.shopify
+
+extensions/*/assets
+extensions/*/dist
+extensions/*/node_modules
+
+apps/*/node_modules
+
+.env
+.env.*
