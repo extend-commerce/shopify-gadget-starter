@@ -1,5 +1,3 @@
-import { Spinner } from '@shopify/polaris';
-
 export function FullPageSpinner() {
   return (
     <div
@@ -11,7 +9,7 @@ export function FullPageSpinner() {
         width: '100%',
       }}
     >
-      <Spinner accessibilityLabel="Spinner example" size="large" />
+      <s-spinner accessibilityLabel="Spinner example" size="large" />
     </div>
   );
 }

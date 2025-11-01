@@ -11,6 +11,9 @@ export default defineConfig({
       shared: path.resolve(__dirname, './shared'),
     },
   },
+  optimizeDeps: {
+    include: ['@shopify/app-bridge-react'],
+  },
   ssr: {
     noExternal: ['posthog-js', 'posthog-js/react'],
   },

@@ -10,8 +10,7 @@
     ".graphqlrc.ts",
     "settings.gadget.ts",
     "react-router.config.ts",
-    "accessControl/permissions.gadget.ts",
-    "deploy.ts"
+    "accessControl/permissions.gadget.ts"
   ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",

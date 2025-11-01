@@ -19,7 +19,8 @@
       "vite/client",
       "@react-router/node",
       "@shopify/app-bridge-types",
-      "@shopify/admin-api-client"
+      "@shopify/admin-api-client",
+      "@shopify/polaris-types"
     ],
     "target": "ES2022",
     "module": "ES2022",

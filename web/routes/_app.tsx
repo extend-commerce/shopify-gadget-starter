@@ -1,34 +1,50 @@
-import { Card, Page, Text } from '@shopify/polaris';
-import { Fragment } from 'react';
 import { Outlet } from 'react-router';
+import { MantleProvider } from 'web/components/mantle-provider';
 import { NavMenu } from 'web/components/nav-menu';
+import { AnalyticsContextProvider } from 'web/lib/analytics';
 import { type Route } from './+types/_app';
 
-export function loader({ context }: Route.LoaderArgs) {
-  return { gadgetConfig: context.gadgetConfig };
+export async function loader({ context }: Route.LoaderArgs) {
+  if (!context.gadgetConfig.shopifyInstallState) {
+    return { gadgetConfig: context.gadgetConfig };
+  }
+
+  const shop = await context.api.shopifyShop.maybeFindFirst({
+    select: { mantleApiToken: true },
+  });
+
+  return {
+    gadgetConfig: context.gadgetConfig,
+    customerApiToken: shop?.mantleApiToken,
+  };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { gadgetConfig } = loaderData;
+  const { customerApiToken, gadgetConfig } = loaderData;
 
-  if (!gadgetConfig.shopifyInstallState) return <Unauthenticated />;
+  if (!gadgetConfig.shopifyInstallState) {
+    return <Unauthenticated />;
+  }
 
   return (
-    <Fragment>
-      <NavMenu />
-      <Outlet />
-    </Fragment>
+    <AnalyticsContextProvider>
+      <MantleProvider
+        appId={process.env.GADGET_PUBLIC_MANTLE_APP_ID}
+        customerApiToken={customerApiToken}
+      >
+        <NavMenu />
+        <Outlet />
+      </MantleProvider>
+    </AnalyticsContextProvider>
   );
 }
 
 function Unauthenticated() {
   return (
-    <Page>
-      <Card padding="500">
-        <Text variant="headingLg" as="h1">
-          App must be viewed in the Shopify Admin
-        </Text>
-      </Card>
-    </Page>
+    <s-page>
+      <s-section padding="base">
+        <s-heading>App must be viewed in the Shopify Admin</s-heading>
+      </s-section>
+    </s-page>
   );
 }

@@ -1,6 +1,7 @@
 import { type Client } from '@gadget-client/shopify-gadget-starter';
 import { MantleClient } from '@heymantle/client';
 
+// NOTE: Using a custom ShopifyShop type because gadget doesn't expose the accessToken field in the ShopifyShop type
 interface ShopifyShop {
   accessToken?: string;
   id: string;
