@@ -1,4 +1,4 @@
-import { type AnalyticsEvent, type AnalyticsProvider } from './types';
+import { type AnalyticsEvent, type AnalyticsProvider } from '../types';
 
 export class MockAnalyticsProvider implements AnalyticsProvider {
   init(): void {

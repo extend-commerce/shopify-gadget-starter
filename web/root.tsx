@@ -2,6 +2,7 @@ import {
   AppType,
   Provider as GadgetProvider,
 } from '@gadgetinc/react-shopify-app-bridge';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import { type RouteContext } from 'gadget-server';
 import { ErrorBoundary as DefaultGadgetErrorBoundary } from 'gadget-server/react-router';
 import { useEffect } from 'react';
@@ -13,6 +14,8 @@ import {
   ScrollRestoration,
   useLocation,
   useNavigate,
+  useNavigation,
+  type LinksFunction,
   type MetaFunction,
 } from 'react-router';
 import { type Route } from './+types/root';
@@ -24,6 +27,14 @@ declare module 'react-router' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface AppLoadContext extends RouteContext {}
 }
+
+export const links: LinksFunction = () => [
+  { rel: 'preconnect', href: 'https://cdn.shopify.com/' },
+  {
+    rel: 'stylesheet',
+    href: 'https://cdn.shopify.com/static/fonts/inter/v4/styles.css',
+  },
+];
 
 export const meta: MetaFunction = () => [
   { charset: 'utf-8' },
@@ -46,6 +57,18 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const { gadgetConfig } = loaderData;
   const location = useLocation();
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
+  const shopify = useAppBridge();
+
+  useEffect(() => {
+    if (isNavigating) {
+      shopify.loading(true);
+    } else {
+      shopify.loading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNavigating]);
 
   useEffect(() => {
     function handleNavigate(event: Event) {
@@ -64,15 +87,10 @@ export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <html lang="en" className="light">
       <head>
-        <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-        <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
-        <link rel="preconnect" href="https://cdn.shopify.com/" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css"
-        />
         <Meta />
         <Links />
+        <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+        <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
       </head>
       <body>
         <GadgetProvider

@@ -1,4 +1,4 @@
-import { type AnalyticsEvent, type AnalyticsProvider } from './providers/types';
+import { type AnalyticsEvent, type AnalyticsProvider } from './types';
 
 export class AnalyticsManager {
   providers: AnalyticsProvider[] = [];

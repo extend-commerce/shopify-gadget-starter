@@ -12,6 +12,7 @@ function getConfig() {
         documents: ['./web/**/*.{js,ts,jsx,tsx}', './api/**/*.{js,ts,jsx,tsx}'],
         outputDir: './shared/_generated',
         declarations: false,
+        enumsAsConst: true,
       }),
     },
   };

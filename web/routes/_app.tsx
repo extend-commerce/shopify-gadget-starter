@@ -1,4 +1,7 @@
-import { Outlet } from 'react-router';
+import { Suspense } from 'react';
+import { Await, Outlet } from 'react-router';
+import { generateFeaturebaseToken } from 'shared/featurebase.server';
+import { Featurebase } from 'web/components/featurebase';
 import { MantleProvider } from 'web/components/mantle-provider';
 import { NavMenu } from 'web/components/nav-menu';
 import { AnalyticsContextProvider } from 'web/lib/analytics';
@@ -13,14 +16,18 @@ export async function loader({ context }: Route.LoaderArgs) {
     select: { mantleApiToken: true },
   });
 
+  // NOTE: streaming the featurebase token, because it is not needed for the initial render
+  const featurebaseToken = generateFeaturebaseToken(context.api);
+
   return {
     gadgetConfig: context.gadgetConfig,
     customerApiToken: shop?.mantleApiToken,
+    featurebaseToken,
   };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { customerApiToken, gadgetConfig } = loaderData;
+  const { customerApiToken, gadgetConfig, featurebaseToken } = loaderData;
 
   if (!gadgetConfig.shopifyInstallState) {
     return <Unauthenticated />;
@@ -34,6 +41,13 @@ export default function App({ loaderData }: Route.ComponentProps) {
       >
         <NavMenu />
         <Outlet />
+        {featurebaseToken ? (
+          <Suspense fallback={null}>
+            <Await resolve={featurebaseToken}>
+              {token => <Featurebase featurebaseToken={token} />}
+            </Await>
+          </Suspense>
+        ) : null}
       </MantleProvider>
     </AnalyticsContextProvider>
   );

@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { AnalyticsManager } from './manager';
-import { MockAnalyticsProvider } from './providers/mock';
+import { MockAnalyticsProvider } from './provider/mock';
 // import { MantleAnalyticsProvider } from './providers/mantle';
 // import { MixpanelAnalyticsProvider } from './providers/mixpanel';
 // import { PostHogAnalyticsProvider } from './providers/posthog';
@@ -28,6 +28,7 @@ export function AnalyticsContextProvider({ children }: PropsWithChildren) {
       // analyticsManager.addProvider(new PostHogAnalyticsProvider());
       // analyticsManager.addProvider(new MixpanelAnalyticsProvider());
     } else {
+      // analyticsManager.addProvider(new MantleAnalyticsProvider());
       analyticsManager.addProvider(new MockAnalyticsProvider());
     }
 

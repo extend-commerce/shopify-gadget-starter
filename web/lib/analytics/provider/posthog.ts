@@ -1,5 +1,5 @@
 import { type PostHog } from 'posthog-js';
-import { type AnalyticsEvent, type AnalyticsProvider } from './types';
+import { type AnalyticsEvent, type AnalyticsProvider } from '../types';
 
 export class PostHogAnalyticsProvider implements AnalyticsProvider {
   #posthog: PostHog | undefined;

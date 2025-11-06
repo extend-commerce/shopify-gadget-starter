@@ -1,6 +1,6 @@
 import { minutesToMilliseconds } from 'date-fns/minutesToMilliseconds';
 import { type OverridedMixpanel } from 'mixpanel-browser';
-import { type AnalyticsProvider } from './types';
+import { type AnalyticsProvider } from '../types';
 
 export class MixpanelAnalyticsProvider implements AnalyticsProvider {
   #mixpanel: OverridedMixpanel | undefined;
