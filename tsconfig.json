@@ -1,5 +1,6 @@
 {
   "files": [],
+  "exclude": ["extensions/*", "theme-extension/*"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

@@ -15,6 +15,7 @@
     "shopify:deploy": "shopify app deploy",
     "shopify:info": "shopify app info",
     "shopify:env": "shopify app env",
+    "theme-extension": "yarn workspace theme-extension",
     "graphql-codegen": "graphql-codegen",
     "router-typegen": "react-router typegen",
     "commit": "cz",

@@ -6,6 +6,7 @@ node_modules/
 extensions/**/dist
 extensions/**/node_modules
 extensions/**/generated
+extensions/theme-extension/assets
 shopify.app.*.toml
 .env.*
 .shopify/
@@ -13,3 +14,6 @@ shopify.app.*.toml
 # Generated files
 shared/_generated/
 .react-router/
+
+# Template Only
+theme-extension/
