@@ -62,11 +62,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const shopify = useAppBridge();
 
   useEffect(() => {
-    if (isNavigating) {
-      shopify.loading(true);
-    } else {
-      shopify.loading(false);
-    }
+    shopify.loading(isNavigating);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNavigating]);
 
