@@ -19,7 +19,8 @@
     "graphql-codegen": "graphql-codegen",
     "router-typegen": "react-router typegen",
     "commit": "cz",
-    "prepare": "node .husky/install.mjs"
+    "prepare": "node .husky/install.mjs",
+    "test": "vitest"
   },
   "resolutions": {
     "vite": "github:gadget-inc/vite#vite-v6.3.5-gitpkg-1f0e9a3d8"
@@ -51,17 +52,22 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/cz-commitlint": "^19.8.1",
     "@eslint/js": "^9.35.0",
+    "@faker-js/faker": "^10.1.0",
     "@react-router/dev": "^7.8.2",
     "@shopify/admin-api-client": "^1.1.1",
     "@shopify/api-codegen-preset": "^1.2.0",
     "@shopify/app-bridge-types": "^0.5.3",
     "@shopify/polaris-types": "^1.0.1",
     "@shopify/shopify-api": "^11.14.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.13.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@vitest/ui": "^4.0.14",
     "commitizen": "^4.3.1",
     "eslint": "^9.35.0",
     "eslint-plugin-import-x": "^4.16.1",
@@ -70,10 +76,12 @@
     "globals": "^16.3.0",
     "graphql-config": "^5.1.5",
     "husky": "^9.1.7",
+    "jsdom": "^27.2.0",
     "react-router-devtools": "^5.1.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.42.0",
-    "vite": "github:gadget-inc/vite#vite-v6.3.5-gitpkg-1f0e9a3d8"
+    "vite": "github:gadget-inc/vite#vite-v6.3.5-gitpkg-1f0e9a3d8",
+    "vitest": "^4.0.14"
   },
   "workspaces": {
     "packages": [

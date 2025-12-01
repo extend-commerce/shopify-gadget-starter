@@ -34,7 +34,7 @@ interface ProductCardProps {
 }
 const PLACEHOLDER_IMAGE_URL = 'https://placehold.co/600x400';
 
-function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const image = product.featuredMedia?.preview?.image;
   const imageAltText = image?.altText ?? product.title;
   const imageUrl = image?.url ?? PLACEHOLDER_IMAGE_URL;
@@ -45,9 +45,10 @@ function ProductCard({ product }: ProductCardProps) {
   }).format(product.priceRangeV2.minVariantPrice.amount ?? 0);
 
   return (
-    <s-section padding="none">
+    <s-section padding="none" data-testid="product-card">
       <s-stack direction="block" gap="base">
         <s-image
+          data-testid="product-card-image"
           src={imageUrl}
           alt={imageAltText}
           inlineSize="fill"
@@ -62,7 +63,9 @@ function ProductCard({ product }: ProductCardProps) {
               gap="base"
               justifyContent="space-between"
             >
-              <s-text type="strong">{price}</s-text>
+              <s-text type="strong" data-testid="product-card-price">
+                {price}
+              </s-text>
               <s-badge tone="success">Available</s-badge>
             </s-stack>
           </s-stack>

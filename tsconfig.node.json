@@ -6,6 +6,7 @@
     "shared/**/*",
     "reset.d.ts",
     "vite.config.mts",
+    "vitest.config.mts",
     "eslint.config.ts",
     ".graphqlrc.ts",
     "settings.gadget.ts",
