@@ -17,7 +17,6 @@ const AnalyticsContext = createContext<AnalyticsManager>(analyticsManager);
 export const useAnalytics = () => useContext(AnalyticsContext);
 
 export function AnalyticsContextProvider({ children }: PropsWithChildren) {
-  const [hydrated, setHydrated] = useState(false);
   const [analyticsManager] = useState<AnalyticsManager>(
     () => new AnalyticsManager(),
   );
@@ -33,10 +32,7 @@ export function AnalyticsContextProvider({ children }: PropsWithChildren) {
     }
 
     analyticsManager.init();
-    setHydrated(true);
   }, [analyticsManager]);
-
-  if (!hydrated) return children;
 
   return (
     <AnalyticsContext.Provider value={analyticsManager}>

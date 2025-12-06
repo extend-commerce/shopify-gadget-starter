@@ -1,7 +1,7 @@
 import { type AnalyticsEvent, type AnalyticsProvider } from '../types';
 
 export class MockAnalyticsProvider implements AnalyticsProvider {
-  init(): void {
+  async init(): Promise<void> {
     console.log('[MockAnalyticsProvider] initialized'); // eslint-disable-line no-console
   }
 

@@ -2,20 +2,18 @@ import { type AnalyticsEvent, type AnalyticsProvider } from './types';
 
 export class AnalyticsManager {
   providers: AnalyticsProvider[] = [];
-  #intialized = false;
+  #initialized = false;
 
-  init() {
-    if (this.#intialized) return;
+  async init() {
+    if (this.#initialized) return;
 
-    for (const provider of this.providers) {
-      provider.init();
-    }
-    this.#intialized = true;
+    await Promise.allSettled(this.providers.map(provider => provider.init()));
+    this.#initialized = true;
   }
 
   addProvider(provider: AnalyticsProvider) {
     this.providers.push(provider);
-    if (this.#intialized) provider.init();
+    if (this.#initialized) provider.init();
   }
 
   removeProvider(provider: AnalyticsProvider) {
@@ -23,12 +21,22 @@ export class AnalyticsManager {
   }
 
   track(event: AnalyticsEvent, properties?: Record<string, JSONValue>) {
+    if (!this.#initialized) {
+      console.warn('AnalyticsManager not initialized'); // eslint-disable-line no-console
+      return;
+    }
+
     for (const provider of this.providers) {
       provider.track(event, properties);
     }
   }
 
   identify(distinctId: string, properties?: Record<string, JSONValue>) {
+    if (!this.#initialized) {
+      console.warn('AnalyticsManager not initialized'); // eslint-disable-line no-console
+      return;
+    }
+
     for (const provider of this.providers) {
       provider.identify(distinctId, properties);
     }

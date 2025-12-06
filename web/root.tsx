@@ -30,10 +30,6 @@ declare module 'react-router' {
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://cdn.shopify.com/' },
-  {
-    rel: 'stylesheet',
-    href: 'https://cdn.shopify.com/static/fonts/inter/v4/styles.css',
-  },
 ];
 
 export const meta: MetaFunction = () => [

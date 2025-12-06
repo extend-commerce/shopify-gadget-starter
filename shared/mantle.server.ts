@@ -27,7 +27,7 @@ export async function identifyShop(shop: ShopifyShop, api: Client) {
     platform: 'shopify',
     platformId: id,
     myshopifyDomain: myshopifyDomain ?? undefined,
-    accessToken: accessToken ?? undefined,
+    accessToken,
     name: name ?? undefined,
     email: email ?? undefined,
   });

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 const FEATUREBASE_APP_ID = process.env.GADGET_PUBLIC_FEATUREBASE_APP_ID;
 
 interface FeaturebaseProps {
-  featurebaseToken?: string | null;
+  featurebaseToken: string;
 }
 
 export function Featurebase({ featurebaseToken }: FeaturebaseProps) {

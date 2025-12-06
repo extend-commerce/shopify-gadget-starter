@@ -44,7 +44,9 @@ export default function App({ loaderData }: Route.ComponentProps) {
         {featurebaseToken ? (
           <Suspense fallback={null}>
             <Await resolve={featurebaseToken}>
-              {token => <Featurebase featurebaseToken={token} />}
+              {token => (
+                <>{token ? <Featurebase featurebaseToken={token} /> : null}</>
+              )}
             </Await>
           </Suspense>
         ) : null}
