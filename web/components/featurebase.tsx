@@ -1,18 +1,19 @@
-import { useMantle } from '@heymantle/react';
 import { useEffect } from 'react';
 
 const FEATUREBASE_APP_ID = process.env.GADGET_PUBLIC_FEATUREBASE_APP_ID;
 
 interface FeaturebaseProps {
   featurebaseToken: string;
+  customer: {
+    id: string;
+    name: string;
+    locale: string;
+    email: string;
+  };
 }
 
-export function Featurebase({ featurebaseToken }: FeaturebaseProps) {
-  const { customer, loading } = useMantle();
-
+export function Featurebase({ featurebaseToken, customer }: FeaturebaseProps) {
   useEffect(() => {
-    if (loading) return;
-
     const script = document.createElement('script');
     script.src = 'https://do.featurebase.app/js/sdk.js';
     script.id = 'featurebase-sdk';
@@ -31,10 +32,12 @@ export function Featurebase({ featurebaseToken }: FeaturebaseProps) {
     win.Featurebase('boot', {
       appId: FEATUREBASE_APP_ID,
       featurebaseJwt: featurebaseToken,
-      userId: customer?.id,
-      name: customer?.name,
+      userId: customer.id, // Featurebase expects a string
+      name: customer.name,
+      language: customer.locale,
+      email: customer.email,
     });
-  }, [customer, featurebaseToken, loading]);
+  }, [customer, featurebaseToken]);
 
   return null;
 }

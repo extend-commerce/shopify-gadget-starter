@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Await, Outlet } from 'react-router';
 import { generateFeaturebaseToken } from 'shared/featurebase.server';
+import { getCurrentUser, safeUser } from 'shared/user.server';
 import { Featurebase } from 'web/components/featurebase';
 import { MantleProvider } from 'web/components/mantle-provider';
 import { NavMenu } from 'web/components/nav-menu';
@@ -16,18 +17,28 @@ export async function loader({ context }: Route.LoaderArgs) {
     select: { mantleApiToken: true },
   });
 
-  // NOTE: streaming the featurebase token, because it is not needed for the initial render
-  const featurebaseToken = generateFeaturebaseToken(context.api);
+  // NOTE: turning the customer info into a promise to allow streaming, because it is not needed for the initial render
+  const customerInfo = (async function getCustomerInfo() {
+    const shopify = context.connections.shopify;
+    const merchant = await getCurrentUser(shopify).catch(() => null);
+    if (!merchant) return null;
+
+    const customer = safeUser(merchant);
+    return {
+      featurebaseToken: generateFeaturebaseToken(customer),
+      customer, // only sending the required properties of the customer
+    };
+  })();
 
   return {
     gadgetConfig: context.gadgetConfig,
     customerApiToken: shop?.mantleApiToken,
-    featurebaseToken,
+    customerInfo,
   };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { customerApiToken, gadgetConfig, featurebaseToken } = loaderData;
+  const { customerApiToken, gadgetConfig, customerInfo } = loaderData;
 
   if (!gadgetConfig.shopifyInstallState) {
     return <Unauthenticated />;
@@ -41,15 +52,18 @@ export default function App({ loaderData }: Route.ComponentProps) {
       >
         <NavMenu />
         <Outlet />
-        {featurebaseToken ? (
-          <Suspense fallback={null}>
-            <Await resolve={featurebaseToken}>
-              {token => (
-                <>{token ? <Featurebase featurebaseToken={token} /> : null}</>
-              )}
-            </Await>
-          </Suspense>
-        ) : null}
+        <Suspense fallback={null}>
+          <Await resolve={customerInfo}>
+            {resolved =>
+              resolved && resolved.featurebaseToken ? (
+                <Featurebase
+                  featurebaseToken={resolved.featurebaseToken}
+                  customer={resolved.customer}
+                />
+              ) : null
+            }
+          </Await>
+        </Suspense>
       </MantleProvider>
     </AnalyticsContextProvider>
   );

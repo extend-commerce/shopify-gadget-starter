@@ -105,26 +105,6 @@ export async function updateAllTokens(api: Client) {
   return console.info('all mantle tokens have been updated');
 }
 
-export async function getCurrentCustomer(authenticatedApi: Client) {
-  const shop = await authenticatedApi.shopifyShop.maybeFindFirst({
-    select: { mantleApiToken: true },
-  });
-
-  if (!shop?.mantleApiToken) {
-    return null;
-  }
-
-  const mantleClient = getMantleClient(shop.mantleApiToken);
-  const response = await mantleClient?.getCustomer();
-
-  if (!response || 'error' in response) {
-    console.error(response?.error ?? 'empty response from mantle'); // eslint-disable-line no-console
-    return null;
-  }
-
-  return response;
-}
-
 export function getMantleClient(customerApiToken?: string) {
   if (!process.env.GADGET_PUBLIC_MANTLE_APP_ID) {
     console.error('GADGET_PUBLIC_MANTLE_APP_ID not found'); // eslint-disable-line no-console
