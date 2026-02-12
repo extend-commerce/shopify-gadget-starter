@@ -1,15 +1,21 @@
-import { type GadgetModel } from 'gadget-server';
+import type { GadgetModel } from "gadget-server";
 
 // This file describes the schema for the "shopifyShop" model, go to https://shopify-gadget-starter.gadget.app/edit to view/edit your model in Gadget
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
-  type: 'gadget/model-schema/v2',
-  storageKey: 'DataModel-Shopify-Shop',
+  type: "gadget/model-schema/v2",
+  storageKey: "DataModel-Shopify-Shop",
   fields: {
+    chargeId: {
+      type: "string",
+      storageKey: "OSTVfGCKrBzc",
+      filterIndex: false,
+      searchIndex: false,
+    },
     mantleApiToken: {
-      type: 'string',
-      storageKey: 'iFR8sKtCeF24',
+      type: "string",
+      storageKey: "iFR8sKtCeF24",
       searchIndex: false,
     },
   },
@@ -19,6 +25,7 @@ export const schema: GadgetModel = {
       address1: { filterIndex: false, searchIndex: false },
       address2: { filterIndex: false, searchIndex: false },
       alerts: { filterIndex: false, searchIndex: false },
+      appSubscriptions: true,
       billingAddress: { filterIndex: false, searchIndex: false },
       checkoutApiSupported: {
         filterIndex: false,
@@ -108,6 +115,7 @@ export const schema: GadgetModel = {
       richTextEditorUrl: { filterIndex: false, searchIndex: false },
       setupRequired: { filterIndex: false, searchIndex: false },
       shipsToCountries: { filterIndex: false, searchIndex: false },
+      shopAddress: { filterIndex: false, searchIndex: false },
       shopOwner: { filterIndex: false, searchIndex: false },
       shopifyCreatedAt: { filterIndex: false, searchIndex: false },
       shopifyUpdatedAt: { filterIndex: false, searchIndex: false },

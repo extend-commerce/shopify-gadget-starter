@@ -1,9 +1,7 @@
 import { type GetProductsQuery } from 'shared/_generated/admin.generated';
 import { type Route } from './+types/_app._index';
 
-export async function loader({
-  context: { api, gadgetConfig },
-}: Route.LoaderArgs) {
+export async function loader({ context: { api, gadgetConfig } }: Route.LoaderArgs) {
   if (!gadgetConfig.shopifyInstallState) {
     return { products: [] };
   }
@@ -17,10 +15,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
 
   return (
     <s-page heading="Shopify Gadget Starter">
-      <s-grid
-        gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-        gap="base"
-      >
+      <s-grid gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap="base">
         {products.map(product => (
           <ProductCard product={product} key={product.id} />
         ))}
@@ -58,11 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <s-box paddingInline="base" paddingBlockEnd="base">
           <s-stack direction="block" gap="small">
             <s-heading>{product.title}</s-heading>
-            <s-stack
-              direction="inline"
-              gap="base"
-              justifyContent="space-between"
-            >
+            <s-stack direction="inline" gap="base" justifyContent="space-between">
               <s-text type="strong" data-testid="product-card-price">
                 {price}
               </s-text>

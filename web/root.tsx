@@ -1,7 +1,4 @@
-import {
-  AppType,
-  Provider as GadgetProvider,
-} from '@gadgetinc/react-shopify-app-bridge';
+import { AppType, Provider as GadgetProvider } from '@gadgetinc/react-shopify-app-bridge';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import { type RouteContext } from 'gadget-server';
 import { ErrorBoundary as DefaultGadgetErrorBoundary } from 'gadget-server/react-router';
@@ -18,6 +15,7 @@ import {
   type LinksFunction,
   type MetaFunction,
 } from 'react-router';
+import { checkBilling } from 'shared/billing.server';
 import { type Route } from './+types/root';
 import { api } from './api';
 import './app.css';
@@ -28,9 +26,7 @@ declare module 'react-router' {
   interface AppLoadContext extends RouteContext {}
 }
 
-export const links: LinksFunction = () => [
-  { rel: 'preconnect', href: 'https://cdn.shopify.com/' },
-];
+export const links: LinksFunction = () => [{ rel: 'preconnect', href: 'https://cdn.shopify.com/' }];
 
 export const meta: MetaFunction = () => [
   { charset: 'utf-8' },
@@ -44,18 +40,36 @@ export const meta: MetaFunction = () => [
 ];
 
 export async function loader({ context }: Route.LoaderArgs) {
+  if (!context.gadgetConfig.shopifyInstallState) {
+    return { gadgetConfig: context.gadgetConfig };
+  }
+
+  const { hasActivePayment } = await checkBilling(context);
+  if (hasActivePayment) {
+    return { gadgetConfig: context.gadgetConfig };
+  }
+
+  const app = await context.api.shopifyApp.findFirst({ select: { handle: true } });
+  const redirectUrl = `shopify://admin/charges/${app.handle}/pricing_plans`;
+
   return {
     gadgetConfig: context.gadgetConfig,
+    redirectUrl,
   };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { gadgetConfig } = loaderData;
+  const { gadgetConfig, redirectUrl } = loaderData;
   const location = useLocation();
   const navigate = useNavigate();
   const navigation = useNavigation();
   const isNavigating = Boolean(navigation.location);
   const shopify = useAppBridge();
+
+  useEffect(() => {
+    // redirect to billing if the store has no active subscription
+    if (redirectUrl) window.open(redirectUrl, '_top');
+  }, [redirectUrl]);
 
   useEffect(() => {
     shopify.loading(isNavigating);

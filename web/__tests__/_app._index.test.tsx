@@ -61,9 +61,7 @@ test('Index Route renders currency correctly', async () => {
     currency: product.priceRangeV2.minVariantPrice.currencyCode,
   }).format(Number(product.priceRangeV2.minVariantPrice.amount));
 
-  expect(screen.getByTestId('product-card-price').textContent).toBe(
-    expectedPrice,
-  );
+  expect(screen.getByTestId('product-card-price').textContent).toBe(expectedPrice);
 });
 
 // helpers

@@ -12,6 +12,16 @@ export const permissions: GadgetPermissions = {
     'shopify-app-users': {
       storageKey: 'Role-Shopify-App',
       models: {
+        shopifyAppSubscription: {
+          read: {
+            filter: 'accessControl/filters/shopify/shopifyAppSubscription.gelly',
+          },
+          actions: {
+            create: true,
+            delete: true,
+            update: true,
+          },
+        },
         shopifyGdprRequest: {
           read: {
             filter: 'accessControl/filters/shopify/shopifyGdprRequest.gelly',

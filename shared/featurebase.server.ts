@@ -1,10 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export function generateFeaturebaseToken(customer: {
-  name: string;
-  email: string;
-  id: string;
-}) {
+export function generateFeaturebaseToken(customer: { name: string; email: string; id: string }) {
   if (!process.env.FEATUREBASE_SECRET) {
     console.error('FEATUREBASE_SECRET not found'); // eslint-disable-line no-console
     return null;

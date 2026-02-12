@@ -6,11 +6,7 @@ type MantleProviderProps = PropsWithChildren<{
   customerApiToken: string | null | undefined;
 }>;
 
-export function MantleProvider({
-  children,
-  appId,
-  customerApiToken,
-}: MantleProviderProps) {
+export function MantleProvider({ children, appId, customerApiToken }: MantleProviderProps) {
   if (appId && customerApiToken) {
     return (
       <BaseMantleProvider appId={appId} customerApiToken={customerApiToken}>
@@ -20,9 +16,7 @@ export function MantleProvider({
   }
 
   // eslint-disable-next-line no-console
-  console.error(
-    'Mantle not initialized. `appId` or `customerApiToken` not found',
-  );
+  console.error('Mantle not initialized. `appId` or `customerApiToken` not found');
 
   return children;
 }

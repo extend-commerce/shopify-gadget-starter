@@ -1,5 +1,4 @@
 import {
-  type Client,
   type Select,
   type ShopifyShop as ShopifyShopModel,
 } from '@gadget-client/shopify-gadget-starter';
@@ -14,7 +13,7 @@ export interface ShopifyShop extends BaseShopifyShop {
   accessToken?: string;
 }
 
-export async function identifyShop(shop: ShopifyShop, api: Client) {
+export async function identifyShop(shop: ShopifyShop) {
   const { id, name, email, myshopifyDomain, accessToken } = shop;
   const mantleClient = getMantleClient();
 
@@ -34,75 +33,10 @@ export async function identifyShop(shop: ShopifyShop, api: Client) {
 
   if ('error' in result) {
     console.error(result.error); // eslint-disable-line no-console
-    return;
+    return null;
   }
 
-  await api.internal.shopifyShop.update(shop.id, {
-    shopifyShop: {
-      mantleApiToken: result.apiToken,
-    },
-  });
-}
-
-export async function updateMissingTokens(api: Client) {
-  const shops: ShopifyShop[] = [];
-  let response = await api.internal.shopifyShop.findMany({
-    select: {
-      accessToken: true,
-      id: true,
-      name: true,
-      email: true,
-      myshopifyDomain: true,
-    },
-    filter: {
-      OR: [
-        { mantleApiToken: { isSet: false } },
-        { mantleApiToken: { equals: null } },
-        { mantleApiToken: { equals: '' } },
-      ],
-    },
-    first: 250,
-  });
-
-  shops.push(...(response as unknown as ShopifyShop[]));
-  while (response.hasNextPage) {
-    response = await response.nextPage();
-    shops.push(...(response as unknown as ShopifyShop[]));
-  }
-
-  for (const shop of shops) {
-    await identifyShop(shop, api);
-  }
-
-  // eslint-disable-next-line no-console
-  return console.info('all missing mantle tokens updated');
-}
-
-export async function updateAllTokens(api: Client) {
-  const shops: ShopifyShop[] = [];
-  let response = await api.internal.shopifyShop.findMany({
-    select: {
-      accessToken: true,
-      id: true,
-      name: true,
-      email: true,
-      myshopifyDomain: true,
-    },
-    first: 250,
-  });
-
-  shops.push(...(response as unknown as ShopifyShop[]));
-  while (response.hasNextPage) {
-    response = await response.nextPage();
-    shops.push(...(response as unknown as ShopifyShop[]));
-  }
-
-  for (const shop of shops) {
-    await identifyShop(shop, api);
-  }
-
-  // eslint-disable-next-line no-console
-  return console.info('all mantle tokens have been updated');
+  return result;
 }
 
 export function getMantleClient(customerApiToken?: string) {

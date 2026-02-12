@@ -47,8 +47,7 @@ export class MantleAnalyticsProvider implements AnalyticsProvider {
   }
 
   #getExistingMantle(): MantleAnalytics | undefined {
-    const scriptExists =
-      document.querySelector('#mantle-apptrack-script') !== null;
+    const scriptExists = document.querySelector('#mantle-apptrack-script') !== null;
     const mantleTrackExists = 'mantleTrack' in window;
 
     if (scriptExists && mantleTrackExists) {
@@ -59,9 +58,7 @@ export class MantleAnalyticsProvider implements AnalyticsProvider {
   }
 
   #removeExistingScripts(): void {
-    const existingScripts = document.querySelectorAll(
-      '#mantle-apptrack-script',
-    );
+    const existingScripts = document.querySelectorAll('#mantle-apptrack-script');
     existingScripts.forEach(script => script.remove());
   }
 

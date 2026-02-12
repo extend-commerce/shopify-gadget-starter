@@ -14,12 +14,7 @@ const User = z.object({
 export type User = z.infer<typeof User>;
 
 export async function getCurrentUser(shopify: ShopifyConnection) {
-  const {
-    currentSession,
-    currentClientSecret,
-    currentClientId,
-    currentShopDomain,
-  } = shopify;
+  const { currentSession, currentClientSecret, currentClientId, currentShopDomain } = shopify;
 
   if (!currentSession) return null;
 
@@ -29,21 +24,17 @@ export async function getCurrentUser(shopify: ShopifyConnection) {
     subject_token: currentSession.token,
     grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
     subject_token_type: 'urn:ietf:params:oauth:token-type:id_token',
-    requested_token_type:
-      'urn:shopify:params:oauth:token-type:online-access-token',
+    requested_token_type: 'urn:shopify:params:oauth:token-type:online-access-token',
   };
 
-  const response = await fetch(
-    `https://${currentShopDomain}/admin/oauth/access_token`,
-    {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+  const response = await fetch(`https://${currentShopDomain}/admin/oauth/access_token`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
-  )
+  })
     .then(res => (res.ok ? res.json() : null))
     .catch(() => null);
 

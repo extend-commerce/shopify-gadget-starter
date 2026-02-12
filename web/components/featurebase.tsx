@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
+import { useAsyncValue } from 'react-router';
 
 const FEATUREBASE_APP_ID = process.env.GADGET_PUBLIC_FEATUREBASE_APP_ID;
 
-interface FeaturebaseProps {
-  featurebaseToken: string;
+type ResolvedAsyncValue = Nullable<{
+  featurebaseToken: string | null;
   customer: {
     id: string;
     name: string;
     locale: string;
     email: string;
   };
-}
+}>;
 
-export function Featurebase({ featurebaseToken, customer }: FeaturebaseProps) {
+export function Featurebase() {
+  const asyncValue = useAsyncValue() as ResolvedAsyncValue;
+
   useEffect(() => {
+    if (!asyncValue) return;
+
     const script = document.createElement('script');
     script.src = 'https://do.featurebase.app/js/sdk.js';
     script.id = 'featurebase-sdk';
@@ -29,6 +34,7 @@ export function Featurebase({ featurebaseToken, customer }: FeaturebaseProps) {
       };
     }
 
+    const { featurebaseToken, customer } = asyncValue;
     win.Featurebase('boot', {
       appId: FEATUREBASE_APP_ID,
       featurebaseJwt: featurebaseToken,
@@ -37,7 +43,7 @@ export function Featurebase({ featurebaseToken, customer }: FeaturebaseProps) {
       language: customer.locale,
       email: customer.email,
     });
-  }, [customer, featurebaseToken]);
+  }, [asyncValue]);
 
   return null;
 }

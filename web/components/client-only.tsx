@@ -13,9 +13,5 @@ export interface ClientOnlyProps {
 }
 
 export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
-  return useHydrated() ? (
-    <Fragment>{children}</Fragment>
-  ) : (
-    <Fragment>{fallback}</Fragment>
-  );
+  return useHydrated() ? <Fragment>{children}</Fragment> : <Fragment>{fallback}</Fragment>;
 }

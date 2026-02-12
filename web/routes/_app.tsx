@@ -13,27 +13,27 @@ export async function loader({ context }: Route.LoaderArgs) {
     return { gadgetConfig: context.gadgetConfig };
   }
 
-  const shop = await context.api.shopifyShop.maybeFindFirst({
-    select: { mantleApiToken: true },
+  const shop = await context.api.shopifyShop.findFirst({
+    select: { mantleApiToken: true, id: true },
   });
 
   // NOTE: turning the customer info into a promise to allow streaming, because it is not needed for the initial render
-  const customerInfo = (async function getCustomerInfo() {
-    const shopify = context.connections.shopify;
-    const merchant = await getCurrentUser(shopify).catch(() => null);
-    if (!merchant) return null;
+  const customerInfo = getCurrentUser(context.connections.shopify)
+    .then(merchant => {
+      if (!merchant) {
+        return null;
+      }
 
-    const customer = safeUser(merchant);
-    return {
-      featurebaseToken: generateFeaturebaseToken(customer),
-      customer, // only sending the required properties of the customer
-    };
-  })();
+      const customer = safeUser(merchant); // only sending the required properties of the customer
+      return { customer, featurebaseToken: generateFeaturebaseToken(customer) };
+    })
+    .catch(() => null);
 
   return {
     gadgetConfig: context.gadgetConfig,
-    customerApiToken: shop?.mantleApiToken,
+    customerApiToken: shop.mantleApiToken,
     customerInfo,
+    distinctId: shop.id,
   };
 }
 
@@ -45,7 +45,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <AnalyticsContextProvider>
+    <AnalyticsContextProvider distinctId={loaderData.distinctId}>
       <MantleProvider
         appId={process.env.GADGET_PUBLIC_MANTLE_APP_ID}
         customerApiToken={customerApiToken}
@@ -54,14 +54,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Outlet />
         <Suspense fallback={null}>
           <Await resolve={customerInfo}>
-            {resolved =>
-              resolved && resolved.featurebaseToken ? (
-                <Featurebase
-                  featurebaseToken={resolved.featurebaseToken}
-                  customer={resolved.customer}
-                />
-              ) : null
-            }
+            <Featurebase />
           </Await>
         </Suspense>
       </MantleProvider>
