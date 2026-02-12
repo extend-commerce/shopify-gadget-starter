@@ -1,4 +1,4 @@
-import type { GadgetModel } from 'gadget-server';
+import { type GadgetModel } from 'gadget-server';
 
 // This file describes the schema for the "shopifyShop" model, go to https://shopify-gadget-starter.gadget.app/edit to view/edit your model in Gadget
 // For more information on how to update this file http://docs.gadget.dev

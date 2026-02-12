@@ -49,7 +49,7 @@ export async function loader({ context }: Route.LoaderArgs) {
     return { gadgetConfig: context.gadgetConfig };
   }
 
-  const app = await context.api.shopifyApp.findFirst({ select: { handle: true } });
+  const app = await context.api.actAsAdmin.shopifyApp.findFirst({ select: { handle: true } });
   const redirectUrl = `shopify://admin/charges/${app.handle}/pricing_plans`;
 
   return {
@@ -67,8 +67,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const shopify = useAppBridge();
 
   useEffect(() => {
-    // redirect to billing if the store has no active subscription
-    if (redirectUrl) window.open(redirectUrl, '_top');
+    if (redirectUrl) window.open(redirectUrl);
   }, [redirectUrl]);
 
   useEffect(() => {
