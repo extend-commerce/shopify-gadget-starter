@@ -44,6 +44,6 @@ export const onSuccess: ActionOnSuccess = async ({ record, api }) => {
       },
     });
   }
-};;
+};
 
 export const options: ActionOptions = { actionType: 'update' };
