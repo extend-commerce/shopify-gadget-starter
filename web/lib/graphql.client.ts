@@ -13,12 +13,13 @@ declare module '@shopify/admin-api-client' {
 }
 
 export async function graphql<Operation extends keyof Operations, Operations extends AllOperations>(
-  query: Operation,
-  options: Pick<ApiClientRequestOptions<Operation, Operations>, 'variables'>,
+  payload: Pick<ApiClientRequestOptions<Operation, Operations>, 'variables'> & {
+    query: Operation;
+  },
 ) {
   const response = (await fetch(`shopify:admin/api/${API_VERSION}/graphql.json`, {
     method: 'POST',
-    body: JSON.stringify({ query, ...options }),
+    body: JSON.stringify(payload),
   })) as ResponseWithType<FetchResponseBody<ReturnData<Operation, Operations>>>;
 
   if (!response.ok) {
