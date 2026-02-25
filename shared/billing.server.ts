@@ -2,10 +2,19 @@ import { type Select, type ShopifyAppSubscription } from '@gadget-client/shopify
 import { assert, type RouteContext, type ShopifyClient } from 'gadget-server';
 import { type GetCurrentShopPlanQuery } from 'shared/_generated/admin.generated';
 
-type CheckBillingResult = {
-  hasActivePayment: boolean;
+type SubscribedResult = {
+  hasActivePayment: true;
   appSubscriptions: Select<ShopifyAppSubscription, { id: true; status: true }>[];
+  billingUrl?: never;
 };
+
+type NotSubscribedResult = {
+  hasActivePayment: false;
+  appSubscriptions: Select<ShopifyAppSubscription, { id: true; status: true }>[];
+  billingUrl: string;
+};
+
+type CheckBillingResult = SubscribedResult | NotSubscribedResult;
 
 export async function checkBilling({
   api,
@@ -37,7 +46,10 @@ export async function checkBilling({
     return { hasActivePayment: true, appSubscriptions };
   }
 
-  return { hasActivePayment: false, appSubscriptions };
+  const app = await api.actAsAdmin.shopifyApp.findFirst({ select: { handle: true } });
+  const billingUrl = `shopify://admin/charges/${app.handle}/pricing_plans`;
+
+  return { hasActivePayment: false, appSubscriptions, billingUrl };
 }
 
 async function isDevStore(shopify: ShopifyClient) {

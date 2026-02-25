@@ -44,22 +44,16 @@ export async function loader({ context }: Route.LoaderArgs) {
     return { gadgetConfig: context.gadgetConfig };
   }
 
-  const { hasActivePayment } = await checkBilling(context);
+  const { hasActivePayment, billingUrl } = await checkBilling(context);
   if (hasActivePayment) {
     return { gadgetConfig: context.gadgetConfig };
   }
 
-  const app = await context.api.actAsAdmin.shopifyApp.findFirst({ select: { handle: true } });
-  const redirectUrl = `shopify://admin/charges/${app.handle}/pricing_plans`;
-
-  return {
-    gadgetConfig: context.gadgetConfig,
-    redirectUrl,
-  };
+  return { gadgetConfig: context.gadgetConfig, billingUrl };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { gadgetConfig, redirectUrl } = loaderData;
+  const { gadgetConfig, billingUrl } = loaderData;
   const location = useLocation();
   const navigate = useNavigate();
   const navigation = useNavigation();
@@ -67,8 +61,8 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const shopify = useAppBridge();
 
   useEffect(() => {
-    if (redirectUrl) window.open(redirectUrl);
-  }, [redirectUrl]);
+    if (billingUrl) window.open(billingUrl);
+  }, [billingUrl]);
 
   useEffect(() => {
     shopify.loading(isNavigating);
