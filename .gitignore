@@ -17,3 +17,9 @@ shared/_generated/
 
 # Template Only
 theme-extension/
+
+# Agents
+.agents/
+.agent/
+AGENTS.md
+CLAUDE.md

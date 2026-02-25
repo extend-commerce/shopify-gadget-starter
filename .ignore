@@ -8,3 +8,9 @@ apps/*/node_modules
 
 .env
 .env.*
+
+# Agents
+.agents/
+.agent/
+AGENTS.md
+CLAUDE.md
