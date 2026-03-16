@@ -44,6 +44,8 @@ export class MixpanelAnalyticsProvider implements AnalyticsProvider {
     if (this.#mixpanel) return;
 
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.#mixpanel = (await import('mixpanel-browser')).default;
     } catch (_error) {
       console.warn('Error loading mixpanel-browser'); // eslint-disable-line no-console

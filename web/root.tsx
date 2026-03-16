@@ -61,7 +61,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   const shopify = useAppBridge();
 
   useEffect(() => {
-    if (billingUrl) window.open(billingUrl);
+    if (billingUrl) window.open(billingUrl, '_top');
   }, [billingUrl]);
 
   useEffect(() => {

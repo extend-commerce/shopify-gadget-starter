@@ -35,6 +35,8 @@ export class PostHogAnalyticsProvider implements AnalyticsProvider {
     if (this.#posthog) return;
 
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.#posthog = (await import('posthog-js')).default;
     } catch (_error) {
       console.warn('Error loading posthog'); // eslint-disable-line no-console

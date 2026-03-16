@@ -30,12 +30,21 @@ export async function graphql<Operation extends keyof Operations, Operations ext
 
   const body = await response.json();
 
-  const hasErrors = 'errors' in body && Array.isArray(body.errors) && body.errors.length > 0;
-  if (hasErrors) {
+  if (hasErrors(body)) {
     throw new Error(`[GRAPHQL]: operation errored`, {
       cause: body.errors,
     });
   }
 
   return body.data;
+}
+
+function hasErrors(body: unknown): body is { errors: Array<{ message: string }> } {
+  return (
+    typeof body === 'object' &&
+    body !== null &&
+    'errors' in body &&
+    Array.isArray(body.errors) &&
+    body.errors.length > 0
+  );
 }

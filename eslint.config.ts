@@ -18,12 +18,15 @@ export default tseslint.config(
     '.shopify',
     '.husky',
     './shared/_generated/*.ts',
+    'extensions/theme-extension/assets/*',
+    'extensions/**/dist/**/*',
+    'extensions/**/shopify.d.ts',
   ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
   tseslint.configs.strict,
   {
-    files: ['web/**/*.{ts,tsx}', 'shared/**/*.{ts,tsx}'],
+    files: ['{web,shared,extensions}/**/*.{ts,tsx}'],
     plugins: {
       'react': reactPlugin,
       'react-hooks': reactHooks,
@@ -65,10 +68,7 @@ export default tseslint.config(
       'import/consistent-type-specifier-style': ['warn', 'prefer-inline'],
       'no-console': 'error',
     },
-    extends: [
-      reactPlugin.configs.flat.recommended,
-      reactPlugin.configs.flat['jsx-runtime'],
-    ],
+    extends: [reactPlugin.configs.flat.recommended, reactPlugin.configs.flat['jsx-runtime']],
     languageOptions: {
       ecmaVersion: 'latest',
       parserOptions: {
