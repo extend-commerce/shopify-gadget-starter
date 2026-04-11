@@ -868,19 +868,20 @@
   resolved "https://registry.yarnpkg.com/@gadgetinc/core/-/core-0.15.1.tgz#7740035306c89e59b0ddf734f3ce3e6c1d87938f"
   integrity sha512-MFvJ6FfSdcwMPoNhg/1t8O9K41GwIVEmflbbgU1nalTX6KBLcib58q04mFgLv9f/WEnwud9q7aOM9nRH4lNZ1w==
 
-"@gadgetinc/react-shopify-app-bridge@^0.21.1":
-  version "0.21.2"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/react-shopify-app-bridge/-/react-shopify-app-bridge-0.21.2.tgz#25c1fdde536437df3e9419872a617762ad97818c"
-  integrity sha512-38/qCTMhBpgaizh/HLu/OxlQsQSivvd6AvDHw8R6CJZaI/+LPpTCE/hiCWonhzpN1SrF/KAKwSjlcLzZB5Bx4w==
+"@gadgetinc/react-shopify-app-bridge@^0.21.4":
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/react-shopify-app-bridge/-/react-shopify-app-bridge-0.21.4.tgz#31a6a122fed49034219cb5a61236e902fde26aff"
+  integrity sha512-qQ73ocoJbNDQtRqd0jCVSrXwlzztOknYTVHbjwSE49UPK56TTges9+K0dMTdNi64IN4XH5sGaG6keaEzNJLeHQ==
   dependencies:
-    "@gadgetinc/react" "^0.24.2"
+    "@gadgetinc/react" "^0.25.1"
+    "@shopify/app-bridge-react" "^4.2.0"
     crypto-js "^4.2.0"
     tslib "^2.6.2"
 
-"@gadgetinc/react@^0.24.1", "@gadgetinc/react@^0.24.2":
-  version "0.24.2"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.24.2.tgz#b5b49c504bf8b13afe8a4a375c21726e0753fbaa"
-  integrity sha512-2atMnWe4oZfYMj66z+MEHzu6CnBBAv8rh6TxdTiyYPnCCYSjnP+jUlOjSctlbGQ9NcfpKvk1zOVV4a3MJ1FVjQ==
+"@gadgetinc/react@^0.25.1":
+  version "0.25.1"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.25.1.tgz#6acf9d03a1eaa2ee83fdd55646fc009f07e244a3"
+  integrity sha512-qGTXk3axo40l1EnkVVPmWqC224vADm+sfW0pgbYed1WZSvBrn607QC/ZNywfrAQthRi34jxbPAnAD7cWaygdSQ==
   dependencies:
     "@0no-co/graphql.web" "^1.0.4"
     "@gadgetinc/client-hooks" "^0.1.7"
@@ -2087,7 +2088,7 @@
     "@shopify/graphql-codegen" "^0.1.0"
     graphql "^16.10.0"
 
-"@shopify/app-bridge-react@^4.2.7":
+"@shopify/app-bridge-react@^4.2.0", "@shopify/app-bridge-react@^4.2.7":
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-4.2.10.tgz#c4e86db72e777ed91c49d28d08453566731d0817"
   integrity sha512-/VhfsxIvWcK7w5rBY97WdSTApLEg+Z2dT9Zc+idAUiAi48R64nYalXDUG8ar5xRoINHFC/w+9WxYViAazpgfew==

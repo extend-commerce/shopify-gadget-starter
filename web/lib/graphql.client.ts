@@ -6,7 +6,7 @@ import {
   type ReturnData,
 } from '@shopify/admin-api-client';
 
-const API_VERSION = '2026-01';
+const API_VERSION = '2026-04';
 
 declare module '@shopify/admin-api-client' {
   interface AllOperations extends AdminQueries, AdminMutations {}
