@@ -1,4 +1,4 @@
-import { type GetProductsQuery } from 'shared/_generated/admin.generated';
+import { type GetProductsQuery } from '@packages/shared/_generated/admin.generated';
 import { type Route } from './+types/_app._index';
 
 export async function loader({ context: { api, gadgetConfig } }: Route.LoaderArgs) {

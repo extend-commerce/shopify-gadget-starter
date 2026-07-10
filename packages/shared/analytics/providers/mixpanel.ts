@@ -5,15 +5,12 @@ import { type AnalyticsProvider } from '../types';
 export class MixpanelAnalyticsProvider implements AnalyticsProvider {
   #mixpanel: OverridedMixpanel | undefined;
 
-  constructor() {
-    this.loadMixpanel();
-  }
-
   async init() {
     if (!this.#mixpanel) await this.loadMixpanel();
 
     if (!process.env.GADGET_PUBLIC_MIXPANEL_TOKEN) {
-      console.warn('GADGET_PUBLIC_MIXPANEL_TOKEN not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('GADGET_PUBLIC_MIXPANEL_TOKEN not found');
       return;
     }
 
@@ -48,7 +45,8 @@ export class MixpanelAnalyticsProvider implements AnalyticsProvider {
       // @ts-ignore
       this.#mixpanel = (await import('mixpanel-browser')).default;
     } catch (_error) {
-      console.warn('Error loading mixpanel-browser'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('Error loading mixpanel-browser');
     }
   }
 }

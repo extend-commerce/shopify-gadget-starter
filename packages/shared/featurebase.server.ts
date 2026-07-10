@@ -1,13 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-export function generateFeaturebaseToken(customer: { name: string; email: string; id: string }) {
+interface CustomerPayload {
+  name: string;
+  email: string;
+  id: string;
+}
+
+export function generateFeaturebaseToken(customer: CustomerPayload): string | null {
   if (!process.env.FEATUREBASE_SECRET) {
-    console.error('FEATUREBASE_SECRET not found'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error('FEATUREBASE_SECRET not found');
     return null;
   }
 
   if (!customer.name || !customer.email || !customer.id) {
-    console.error('Invalid customer data provided'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error('Invalid customer data provided');
     return null;
   }
 
@@ -22,7 +30,8 @@ export function generateFeaturebaseToken(customer: { name: string; email: string
       algorithm: 'HS256',
     });
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error(error);
     return null;
   }
 }

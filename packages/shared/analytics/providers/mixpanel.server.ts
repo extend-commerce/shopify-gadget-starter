@@ -6,7 +6,8 @@ export class MixpanelServerAnalyticsProvider implements AnalyticsProvider {
 
   async init() {
     if (!process.env.GADGET_PUBLIC_MIXPANEL_TOKEN) {
-      console.error('GADGET_PUBLIC_MIXPANEL_TOKEN not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.error('GADGET_PUBLIC_MIXPANEL_TOKEN not found');
       return Promise.resolve();
     }
 

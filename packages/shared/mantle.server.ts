@@ -18,7 +18,8 @@ export async function identifyShop(shop: ShopifyShop) {
   const mantleClient = getMantleClient();
 
   if (!mantleClient) {
-    console.error('Mantle client not found'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error('Mantle client not found');
     return;
   }
 
@@ -32,7 +33,8 @@ export async function identifyShop(shop: ShopifyShop) {
   });
 
   if ('error' in result) {
-    console.error(result.error); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error(result.error);
     return null;
   }
 
@@ -41,12 +43,14 @@ export async function identifyShop(shop: ShopifyShop) {
 
 export function getMantleClient(customerApiToken?: string) {
   if (!process.env.GADGET_PUBLIC_MANTLE_APP_ID) {
-    console.error('GADGET_PUBLIC_MANTLE_APP_ID not found'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error('GADGET_PUBLIC_MANTLE_APP_ID not found');
     return null;
   }
 
   if (!process.env.MANTLE_API_KEY && !customerApiToken) {
-    console.error('MANTLE_API_KEY not found'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error('MANTLE_API_KEY not found');
     return null;
   }
 

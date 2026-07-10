@@ -4209,6 +4209,11 @@ fdir@^6.4.4, fdir@^6.5.0:
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
 
+featurebase-js@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/featurebase-js/-/featurebase-js-1.0.3.tgz#e99c05a7e04064dcc390afa9c2be73998c4c1027"
+  integrity sha512-Q52xH6KEy6mYpxBl0ZRDzCaxW8EhoUjUxLbgG5e2GIMeiaS4uhKGHPK44yTRUmD+PTBgJ79/dc1GDFSwzz/sgg==
+
 fetch-blob@^3.1.2, fetch-blob@^3.1.4:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.2.0.tgz#f09b8d4bbd45adc6f0c20b7e787e793e309dcce9"
@@ -5520,6 +5525,11 @@ longest@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-2.0.1.tgz#781e183296aa94f6d4d916dc335d0d17aefa23f8"
   integrity sha512-Ajzxb8CM6WAnFjgiloPsI3bF+WCxcvhdIG3KNA2KN962+tdBsHcuQ4k4qX/EcS/2CRkcc0iAkR956Nib6aXU/Q==
+
+loops@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/loops/-/loops-7.0.0.tgz#8f2d4897852c7a682d4cfb66ed3466bb7f671869"
+  integrity sha512-TNbnJndtZwE7Esmc6+xKy3xWZOqzq8xQ5IqvZ+CBS9MOjqcx8qgyfsWoW4F7oNZGkX7uS1+RDxvUAswwD2hR5Q==
 
 loose-envify@^1.0.0, loose-envify@^1.4.0:
   version "1.4.0"

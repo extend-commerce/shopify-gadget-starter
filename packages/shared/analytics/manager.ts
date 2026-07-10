@@ -7,13 +7,22 @@ export class AnalyticsManager {
   async init() {
     if (this.#initialized) return;
 
-    await Promise.allSettled(this.providers.map(provider => provider.init()));
+    const results = await Promise.allSettled(this.providers.map(provider => provider.init()));
+    results.forEach(result => {
+      if (result.status === 'rejected') {
+        // eslint-disable-next-line no-console
+        console.error('Failed to initialize analytics provider', result.reason);
+      }
+    });
     this.#initialized = true;
   }
 
   addProvider(provider: AnalyticsProvider) {
     this.providers.push(provider);
-    if (this.#initialized) provider.init();
+    if (this.#initialized) {
+      // eslint-disable-next-line no-console
+      provider.init().catch(e => console.error('Failed to init analytics provider', e));
+    }
   }
 
   removeProvider(provider: AnalyticsProvider) {
@@ -22,7 +31,8 @@ export class AnalyticsManager {
 
   track(event: AnalyticsEvent, properties?: Record<string, JSONValue>) {
     if (!this.#initialized) {
-      console.warn('AnalyticsManager not initialized'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('AnalyticsManager not initialized');
       return;
     }
 
@@ -33,7 +43,8 @@ export class AnalyticsManager {
 
   identify(distinctId: string, properties?: Record<string, JSONValue>) {
     if (!this.#initialized) {
-      console.warn('AnalyticsManager not initialized'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('AnalyticsManager not initialized');
       return;
     }
 

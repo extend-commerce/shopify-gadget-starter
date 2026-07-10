@@ -8,12 +8,14 @@ export class PostHogAnalyticsProvider implements AnalyticsProvider {
     if (!this.#posthog) await this.loadPostHog();
 
     if (!process.env.GADGET_PUBLIC_POSTHOG_API_KEY) {
-      console.warn('GADGET_PUBLIC_POSTHOG_API_KEY not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('GADGET_PUBLIC_POSTHOG_API_KEY not found');
       return;
     }
 
     if (!process.env.GADGET_PUBLIC_POSTHOG_API_HOST) {
-      console.warn('GADGET_PUBLIC_POSTHOG_API_HOST not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('GADGET_PUBLIC_POSTHOG_API_HOST not found');
       return;
     }
 
@@ -39,7 +41,8 @@ export class PostHogAnalyticsProvider implements AnalyticsProvider {
       // @ts-ignore
       this.#posthog = (await import('posthog-js')).default;
     } catch (_error) {
-      console.warn('Error loading posthog'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.warn('Error loading posthog');
     }
   }
 }

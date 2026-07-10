@@ -17,7 +17,7 @@ export default tseslint.config(
     '*.yml',
     '.shopify',
     '.husky',
-    './shared/_generated/*.ts',
+    'packages/shared/_generated',
     'extensions/theme-extension/assets/*',
     'extensions/**/dist/**/*',
     'extensions/**/shopify.d.ts',
@@ -26,7 +26,7 @@ export default tseslint.config(
   tseslint.configs.recommended,
   tseslint.configs.strict,
   {
-    files: ['{web,shared,extensions}/**/*.{ts,tsx}'],
+    files: ['{web,extensions}/**/*.{ts,tsx}', 'packages/shared/**/*.{ts,tsx}'],
     plugins: {
       'react': reactPlugin,
       'react-hooks': reactHooks,

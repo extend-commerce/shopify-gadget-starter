@@ -1,0 +1,27 @@
+{
+  "name": "@packages/shared",
+  "private": true,
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "main": "src/index.ts",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "loops": "^7.0.0",
+    "mixpanel": "^0.18.1",
+    "posthog-node": "5.15.0",
+    "mixpanel-browser": "^2.70.0",
+    "posthog-js": "^1.261.7",
+    "@heymantle/client": "^1.1.63"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
+  },
+  "peerDependencies": {
+    "@gadget-client/shopify-gadget-starter": "*",
+    "gadget-server": "*",
+    "date-fns": "*",
+    "typescript": "*",
+    "@types/node": "*",
+    "zod": "*"
+  }
+}

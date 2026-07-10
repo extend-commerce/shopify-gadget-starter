@@ -1,4 +1,5 @@
 import { AppType, Provider as GadgetProvider } from '@gadgetinc/react-shopify-app-bridge';
+import { checkBilling } from '@packages/shared/billing.server';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import { type RouteContext } from 'gadget-server';
 import { ErrorBoundary as DefaultGadgetErrorBoundary } from 'gadget-server/react-router';
@@ -15,7 +16,6 @@ import {
   type LinksFunction,
   type MetaFunction,
 } from 'react-router';
-import { checkBilling } from 'shared/billing.server';
 import { type Route } from './+types/root';
 import { api } from './api';
 import './app.css';

@@ -1,7 +1,6 @@
+import { getAnalytics } from '@packages/shared/analytics.server';
 import { applyParams, save, type ActionOptions } from 'gadget-server';
 import { preventCrossShopDataAccess } from 'gadget-server/shopify';
-import { getAnalytics } from '../../../../shared/analytics.server';
-import { identifyShop } from '../../../../shared/mantle.server';
 
 export const run: ActionRun = async ({ params, record }) => {
   applyParams(params, record);
@@ -9,7 +8,7 @@ export const run: ActionRun = async ({ params, record }) => {
   await save(record);
 };
 
-export const onSuccess: ActionOnSuccess = async ({ record, api }) => {
+export const onSuccess: ActionOnSuccess = async ({ record }) => {
   // update record properties in mixpanel
   const analytics = await getAnalytics();
 
@@ -34,16 +33,6 @@ export const onSuccess: ActionOnSuccess = async ({ record, api }) => {
     updatedShop.country = record.countryName;
   }
   analytics.identify(record.id, updatedShop);
-
-  // Pull in the Mantle token when a shop record is updated
-  const mantleCustomer = await identifyShop(record);
-  if (mantleCustomer) {
-    await api.internal.shopifyShop.update(record.id, {
-      shopifyShop: {
-        mantleApiToken: mantleCustomer.apiToken,
-      },
-    });
-  }
 };
 
 export const options: ActionOptions = { actionType: 'update' };

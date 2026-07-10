@@ -1,6 +1,6 @@
 import { type Select, type ShopifyAppSubscription } from '@gadget-client/shopify-gadget-starter';
 import { assert, type RouteContext, type ShopifyClient } from 'gadget-server';
-import { type GetCurrentShopPlanQuery } from 'shared/_generated/admin.generated';
+import { type GetCurrentShopPlanQuery } from './_generated/admin.generated';
 
 type SubscribedResult = {
   hasActivePayment: true;

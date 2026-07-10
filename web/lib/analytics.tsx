@@ -1,9 +1,9 @@
+import { AnalyticsManager } from '@packages/shared/analytics/manager';
+import { MockAnalyticsProvider } from '@packages/shared/analytics/providers/mock';
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
-import { AnalyticsManager } from 'shared/analytics/manager';
-import { MockAnalyticsProvider } from 'shared/analytics/providers/mock';
-// import { MantleAnalyticsProvider } from 'shared/analytics/providers/mantle';
-// import { MixpanelAnalyticsProvider } from 'shared/analytics/providers/mixpanel';
-// import { PostHogAnalyticsProvider } from 'shared/analytics/providers/posthog';
+// import { MantleAnalyticsProvider } from '@packages/shared/analytics/providers/mantle';
+// import { MixpanelAnalyticsProvider } from '@packages/shared/analytics/providers/mixpanel';
+// import { PostHogAnalyticsProvider } from '@packages/shared/analytics/providers/posthog';
 
 const analyticsManager = new AnalyticsManager();
 const AnalyticsContext = createContext<AnalyticsManager>(analyticsManager);

@@ -6,12 +6,14 @@ export class PostHogServerAnalyticsProvider implements AnalyticsProvider {
 
   async init() {
     if (!process.env.GADGET_PUBLIC_POSTHOG_API_HOST) {
-      console.error('GADGET_PUBLIC_POSTHOG_API_HOST not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.error('GADGET_PUBLIC_POSTHOG_API_HOST not found');
       return Promise.resolve();
     }
 
     if (!process.env.GADGET_PUBLIC_POSTHOG_API_KEY) {
-      console.error('GADGET_PUBLIC_POSTHOG_API_KEY not found'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.error('GADGET_PUBLIC_POSTHOG_API_KEY not found');
       return Promise.resolve();
     }
 

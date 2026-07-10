@@ -1,5 +1,5 @@
+import { type GetProductsQuery } from '@packages/shared/_generated/admin.generated';
 import { assert } from 'gadget-server';
-import { type GetProductsQuery } from '../../shared/_generated/admin.generated';
 
 const GET_PRODUCTS = `#graphql
   query GetProducts {

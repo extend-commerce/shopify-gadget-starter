@@ -77,9 +77,16 @@ export class MantleAnalyticsProvider implements AnalyticsProvider {
         if (mantle) {
           resolve(mantle);
         } else {
-          console.warn('Failed to load mantle-apptrack-script'); // eslint-disable-line no-console
+          // eslint-disable-next-line no-console
+          console.warn('Failed to load mantle-apptrack-script');
           resolve(undefined);
         }
+      };
+
+      scriptTag.onerror = () => {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to load mantle-apptrack-script');
+        resolve(undefined);
       };
 
       document.head.appendChild(scriptTag);
