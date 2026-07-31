@@ -2,12 +2,10 @@
   "extends": "./tsconfig.json",
   "include": [
     ".react-router/types/**/*",
-    "shared/**/*",
     "web/**/*",
     "web/**/.server/**/*",
     "web/**/.client/**/*",
     "reset.d.ts",
-    "shared/**/*",
     "global.d.ts"
   ],
   "compilerOptions": {
@@ -28,8 +26,7 @@
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "web/*": ["./web/*"],
-      "shared/*": ["./shared/*"]
+      "web/*": ["./web/*"]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,

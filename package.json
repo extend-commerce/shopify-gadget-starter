@@ -5,8 +5,8 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "format:check": "prettier --check web/ api/ shared/ --ignore-unknown --no-error-on-unmatched-pattern",
-    "format": "prettier --write web/ api/ shared/ --ignore-unknown --no-error-on-unmatched-pattern",
+    "format:check": "prettier --check web/ api/ packages/ extensions/ --ignore-unknown --no-error-on-unmatched-pattern",
+    "format": "prettier --write web/ api/ packages/ extensions/ --ignore-unknown --no-error-on-unmatched-pattern",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "build": "NODE_ENV=production react-router build",

@@ -1,5 +1,5 @@
 import { getAnalytics } from '@packages/shared/analytics.server';
-import { onInstall } from '@packages/shared/loops.server';
+import { LoopsService } from '@packages/shared/loops.server';
 import { applyParams, save, type ActionOptions } from 'gadget-server';
 
 export const run: ActionRun = async ({ params, record }) => {
@@ -15,7 +15,8 @@ export const onSuccess: ActionOnSuccess = async ({ record, api }) => {
     models: ['shopifyAppSubscription', 'shopifyApp'],
   });
 
-  await onInstall(record);
+  const loops = new LoopsService();
+  await loops.onInstall(record);
 
   const analytics = await getAnalytics();
   analytics.identify(record.id, {

@@ -12,8 +12,8 @@ export async function loader({ context }: Route.LoaderArgs) {
     return { gadgetConfig: context.gadgetConfig };
   }
 
-  const shop = await context.api.shopifyShop.findFirst({
-    select: { id: true },
+  const shopifyApp = await context.api.shopifyApp.maybeFindFirst({
+    select: { handle: true },
   });
 
   // NOTE: turning the customer info into a promise to allow streaming, because it is not needed for the initial render
@@ -31,12 +31,13 @@ export async function loader({ context }: Route.LoaderArgs) {
   return {
     gadgetConfig: context.gadgetConfig,
     customerInfo,
-    distinctId: shop.id,
+    distinctId: context.connections.shopify.currentShopId?.toString(),
+    appHandle: shopifyApp?.handle,
   };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { gadgetConfig, customerInfo } = loaderData;
+  const { gadgetConfig, customerInfo, appHandle } = loaderData;
 
   if (!gadgetConfig.shopifyInstallState) {
     return <Unauthenticated />;
@@ -44,7 +45,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
 
   return (
     <AnalyticsContextProvider distinctId={loaderData.distinctId}>
-      <NavMenu />
+      <NavMenu appHandle={appHandle} />
       <Outlet />
       <Suspense fallback={null}>
         <Await resolve={customerInfo}>

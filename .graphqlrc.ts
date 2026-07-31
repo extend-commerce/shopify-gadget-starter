@@ -10,7 +10,7 @@ function getConfig() {
         apiType: ApiType.Admin,
         apiVersion: ApiVersion.April26,
         documents: ['./{web,api,shared}/**/*.{js,ts,jsx,tsx}'],
-        outputDir: './shared/_generated',
+        outputDir: './packages/shared/_generated',
         declarations: false,
         enumsAsConst: true,
       }),

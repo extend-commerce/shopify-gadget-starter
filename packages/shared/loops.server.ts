@@ -1,38 +1,50 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
+  type GadgetRecord,
   type Select,
-  type ShopifyShop as ShopifyShopModel,
+  type ShopifyShop,
 } from '@gadget-client/shopify-gadget-starter';
-import { LoopsClient } from 'loops';
+import { LoopsClient, type Contact } from 'loops';
 
-type BaseShopifyShop = Select<
-  ShopifyShopModel,
-  { id: true; name: true; email: true; myshopifyDomain: true }
->;
+interface GenericFailureResponse {
+  success: false;
+  error: string;
+}
 
-const loops = new LoopsClient(process.env.LOOPS_API_KEY!);
+type Selection = {
+  id: true;
+  name: true;
+  email: true;
+  myshopifyDomain: true;
+};
 
-// Loops configuration
+type ShopifyShopRecord = GadgetRecord<Select<ShopifyShop, Selection>>;
+
+const LOOPS_APP_NAME = process.env.LOOPS_APP_NAME!;
 const LOOPS_APP_MAILING_LIST_ID = process.env.LOOPS_APP_MAILING_LIST_ID!;
 const LOOPS_UNINSTALL_MAILING_LIST_ID = process.env.LOOPS_UNINSTALL_MAILING_LIST_ID!;
-const LOOPS_APP_NAME = process.env.LOOPS_APP_NAME!;
 
 export const AppStatus = {
   installed: 'installed',
   uninstalled: 'uninstalled',
 } as const;
+export type AppStatus = (typeof AppStatus)[keyof typeof AppStatus];
 
 export const AppEvent = {
   appInstalled: 'app_installed',
   appReinstalled: 'app_reinstalled',
   appUninstalled: 'app_uninstalled',
 } as const;
+export type AppEvent = (typeof AppEvent)[keyof typeof AppEvent];
 
-interface GenericFailureResponse {
-  success: false;
-  error: string;
+interface CreateContactPayload {
+  email: string;
+  userId: string;
+  shopName: string;
+  shopDomain: string;
+  status: AppStatus;
 }
 
 function errorHandler(error: unknown): GenericFailureResponse {
@@ -40,117 +52,163 @@ function errorHandler(error: unknown): GenericFailureResponse {
   return { success: false as const, error: message };
 }
 
-export async function onInstall(shop: BaseShopifyShop): Promise<void> {
-  // create contact in loops
-  const contact = await loops
-    .createContact({
-      email: shop.email!,
-      properties: {
-        userId: shop.id,
-        shopName: shop.name,
-        shopDomain: shop.myshopifyDomain,
-        status: AppStatus.installed,
-      },
-      mailingLists: {
-        [LOOPS_APP_MAILING_LIST_ID]: true,
-      },
-    })
-    .catch(errorHandler);
+export class LoopsService {
+  client: LoopsClient | null = null;
 
-  if (contact.success) {
-    console.log(`Contact successfully created with contactId ${contact.id} for shop ${shop.id}`);
-  } else {
-    return console.error(`Failed to create contact for shop ${shop.id}: ${contact.error}`);
+  constructor() {
+    if (process.env.LOOPS_API_KEY) {
+      this.client = new LoopsClient(process.env.LOOPS_API_KEY);
+    } else {
+      console.error('LOOPS_API_KEY is not set');
+    }
   }
 
-  // send app_installed event, this will trigger the welcome email flow
-  const evt = await loops
-    .sendEvent({
-      userId: contact.id,
-      email: shop.email!,
-      eventName: AppEvent.appInstalled,
-      mailingLists: { [LOOPS_APP_MAILING_LIST_ID]: true },
-      eventProperties: { app_name: LOOPS_APP_NAME },
-    })
-    .catch(errorHandler);
+  public async onInstall(record: ShopifyShopRecord): Promise<void> {
+    const contactId = await this.createContact({
+      email: record.email!,
+      userId: record.id,
+      shopName: record.name ?? '',
+      shopDomain: record.myshopifyDomain ?? '',
+      status: AppStatus.installed,
+    });
 
-  if (evt.success) {
-    console.log(`app_installed event sent successfully for shop ${shop.id}`);
-  } else {
-    console.error(`Failed to send app_installed event for shop ${shop.id}`);
-  }
-}
-
-export async function onReinstall(shop: BaseShopifyShop): Promise<void> {
-  // update contact in loops
-  const contact = await loops
-    .updateContact({
-      email: shop.email!,
-      properties: { status: AppStatus.installed },
-      mailingLists: {
-        [LOOPS_APP_MAILING_LIST_ID]: true,
-        [LOOPS_UNINSTALL_MAILING_LIST_ID]: false,
-      },
-    })
-    .catch(errorHandler);
-
-  if (contact.success) {
-    console.log(`Contact updated successfully for shop ${shop.id}`);
-  } else {
-    return console.error(`Failed to update contact for shop ${shop.id}: ${contact.error}`);
+    if (contactId) {
+      await this.sendEvent(contactId, AppEvent.appInstalled);
+    }
   }
 
-  // send app_reinstalled event, this will trigger the reinstallation email flow
-  const evt = await loops
-    .sendEvent({
-      userId: contact.id,
-      email: shop.email!,
-      eventName: AppEvent.appReinstalled,
-      mailingLists: { [LOOPS_APP_MAILING_LIST_ID]: true },
-      eventProperties: { app_name: LOOPS_APP_NAME },
-    })
-    .catch(errorHandler);
+  public async onReinstall(record: ShopifyShopRecord): Promise<void> {
+    const existingContact = await this.findContact(record.email!);
 
-  if (evt.success) {
-    console.log(`app_reinstalled event sent successfully for shop ${shop.id}`);
-  } else {
-    console.error(`Failed to send app_reinstalled event for shop ${shop.id}`);
-  }
-}
+    if (existingContact) {
+      await this.setStatus(existingContact.id, AppStatus.installed);
+      await this.sendEvent(existingContact.id, AppEvent.appReinstalled);
+      return;
+    }
 
-export async function onUninstall(shop: BaseShopifyShop): Promise<void> {
-  // update contact in loops
-  const contact = await loops
-    .updateContact({
-      email: shop.email!,
-      properties: { status: AppStatus.uninstalled },
-      mailingLists: {
-        [LOOPS_APP_MAILING_LIST_ID]: false,
-        [LOOPS_UNINSTALL_MAILING_LIST_ID]: true,
-      },
-    })
-    .catch(errorHandler);
+    const contactId = await this.createContact({
+      email: record.email!,
+      userId: record.id,
+      shopName: record.name ?? '',
+      shopDomain: record.myshopifyDomain ?? '',
+      status: AppStatus.installed,
+    });
 
-  if (contact.success) {
-    console.log(`Contact with id ${contact.id} deleted successfully for shop ${shop.id}`);
-  } else {
-    return console.error(`Failed to delete contact for shop ${shop.id}: ${contact.error}`);
+    if (contactId) {
+      await this.sendEvent(contactId, AppEvent.appReinstalled);
+    }
   }
 
-  // send app_uninstalled event, this will trigger the uninstallation email flow
-  const evt = await loops
-    .sendEvent({
-      userId: contact.id,
-      email: shop.email!,
-      eventName: AppEvent.appUninstalled,
-      mailingLists: { [LOOPS_UNINSTALL_MAILING_LIST_ID]: true },
-      eventProperties: { app_name: LOOPS_APP_NAME },
-    })
-    .catch(errorHandler);
+  public async onUninstall(record: ShopifyShopRecord): Promise<void> {
+    const existingContact = await this.findContact(record.email!);
 
-  if (evt.success) {
-    console.log(`app_uninstalled event sent successfully for shop ${shop.id}`);
-  } else {
-    console.error(`Failed to send app_uninstalled event for shop ${shop.id}`);
+    if (existingContact) {
+      await this.setStatus(existingContact.id, AppStatus.uninstalled);
+      await this.sendEvent(existingContact.id, AppEvent.appUninstalled);
+      return;
+    }
+
+    const contactId = await this.createContact({
+      email: record.email!,
+      userId: record.id,
+      shopName: record.name ?? '',
+      shopDomain: record.myshopifyDomain ?? '',
+      status: AppStatus.uninstalled,
+    });
+
+    if (contactId) {
+      await this.sendEvent(contactId, AppEvent.appUninstalled);
+    }
+  }
+
+  private async createContact(payload: CreateContactPayload): Promise<string | null> {
+    const response = await this.client
+      ?.createContact({
+        email: payload.email,
+        properties: {
+          userId: payload.userId,
+          shopName: payload.shopName,
+          shopDomain: payload.shopDomain,
+          status: payload.status,
+        },
+        mailingLists: {
+          [LOOPS_APP_MAILING_LIST_ID]: payload.status === AppStatus.installed,
+          [LOOPS_UNINSTALL_MAILING_LIST_ID]: payload.status === AppStatus.uninstalled,
+        },
+      })
+      .catch(errorHandler);
+
+    if (response?.success) {
+      console.log(
+        `Contact successfully created with contactId ${response.id} for shop ${payload.shopDomain}`,
+      );
+      return response.id;
+    }
+
+    console.error(`Failed to create contact for shop ${payload.shopDomain}: ${response?.error}`);
+    return null;
+  }
+
+  private async sendEvent(contactId: string, event: AppEvent): Promise<boolean> {
+    const mailingLists: Record<string, boolean> = {};
+    if (event === AppEvent.appUninstalled) {
+      mailingLists[LOOPS_UNINSTALL_MAILING_LIST_ID] = true;
+    } else {
+      mailingLists[LOOPS_APP_MAILING_LIST_ID] = true;
+    }
+
+    const response = await this.client
+      ?.sendEvent({
+        eventName: event,
+        userId: contactId,
+        mailingLists,
+        eventProperties: { app_name: LOOPS_APP_NAME },
+      })
+      .catch(errorHandler);
+
+    if (response?.success) {
+      console.log(`Event ${event} sent successfully for user ${contactId}`);
+      return true;
+    }
+
+    console.error(`Failed to send event ${event} for user ${contactId}`);
+    return false;
+  }
+
+  private async setStatus(contactId: string, status: AppStatus): Promise<boolean> {
+    const mailingLists: Record<string, boolean> = {};
+
+    if (status === AppStatus.installed) {
+      mailingLists[LOOPS_APP_MAILING_LIST_ID] = true;
+      mailingLists[LOOPS_UNINSTALL_MAILING_LIST_ID] = false;
+    } else {
+      mailingLists[LOOPS_APP_MAILING_LIST_ID] = false;
+      mailingLists[LOOPS_UNINSTALL_MAILING_LIST_ID] = true;
+    }
+
+    const response = await this.client
+      ?.updateContact({
+        userId: contactId,
+        properties: { status },
+        mailingLists,
+      })
+      .catch(errorHandler);
+
+    if (response?.success) {
+      console.log(`Status ${status} set successfully for user ${contactId}`);
+      return true;
+    }
+
+    console.error(`Failed to set status ${status} for user ${contactId}`);
+    return false;
+  }
+
+  private async findContact(email: string): Promise<Contact | null> {
+    const response = (await this.client?.findContact({ email })) ?? [];
+    if (response.length > 0) {
+      return response.at(0) ?? null;
+    }
+
+    return null;
   }
 }

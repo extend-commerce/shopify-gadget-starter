@@ -12,7 +12,7 @@ shopify.app.*.toml
 .shopify/
 
 # Generated files
-shared/_generated/
+packages/shared/_generated/
 .react-router/
 
 # Template Only

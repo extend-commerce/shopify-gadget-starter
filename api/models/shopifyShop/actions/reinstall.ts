@@ -1,5 +1,5 @@
 import { getAnalytics } from '@packages/shared/analytics.server';
-import { onReinstall } from '@packages/shared/loops.server';
+import { LoopsService } from '@packages/shared/loops.server';
 import { applyParams, save, type ActionOptions } from 'gadget-server';
 import { preventCrossShopDataAccess } from 'gadget-server/shopify';
 
@@ -17,7 +17,8 @@ export const onSuccess: ActionOnSuccess = async ({ record, api }) => {
     models: ['shopifyAppSubscription'],
   });
 
-  await onReinstall(record);
+  const loops = new LoopsService();
+  await loops.onReinstall(record);
 
   const analytics = await getAnalytics();
   analytics.track('app_reinstalled', { distinct_id: record.id });

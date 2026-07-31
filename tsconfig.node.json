@@ -3,7 +3,6 @@
   "exclude": [],
   "include": [
     "api/**/*",
-    "shared/**/*",
     "global.d.ts",
     "reset.d.ts",
     "vite.config.mts",

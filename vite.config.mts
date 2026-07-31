@@ -8,7 +8,6 @@ export default defineConfig({
   resolve: {
     alias: {
       web: path.resolve(__dirname, './web'),
-      shared: path.resolve(__dirname, './shared'),
     },
   },
   optimizeDeps: {
@@ -19,7 +18,7 @@ export default defineConfig({
   },
   server: {
     fs: {
-      allow: [path.resolve(__dirname, './shared')],
+      allow: ['packages/shared'],
     },
   },
 });
