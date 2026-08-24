@@ -1,4 +1,4 @@
-shared/_generated/
+packages/shared/_generated/
 .gadget/
 .shopify/
 .react-router/
